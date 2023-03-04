@@ -7,5 +7,5 @@ app_name = 'blog'
 urlpatterns = [
     path('', views.PostsView.as_view(), name='posts'),
     path('create/', views.CreatePostView.as_view(), name='create_post'),
-
+    path('register/', views.RegisterFormView.as_view(), name='register')
 ]

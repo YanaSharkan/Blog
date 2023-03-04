@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Posts{% endblock %}
 
 {% block content %}
-<a href="{% url 'blog:create' %}">Create post</a>
+<a href="{% url 'blog:posts' %}">Create post</a>
 
 {% for entry in entries_list %}
 <div>
@@ -11,7 +12,7 @@
     <div>{{ entry.author }}</div>
     <div>{{ entry.content }}</div>
     <div>
-        <img src="{% entry.image %}">
+        <img width="300px" src="{% static 'image/red_fox.jpg' %}" alt="My image">
     </div>
 </div>
 {% endfor %}
