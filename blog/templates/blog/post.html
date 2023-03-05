@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="post_details">
+        <div><h2>{{entry.title}}</h2></div>
+        <div>Created by: <a href="{% url 'blog:profile' pk=entry.author.id %}">{{ entry.author }}</a></div>
+        <div>{{entry.content}}</div>
+        <div>
+             <img width="300px" src="{{entry.image.url}}" alt="My image">
+        </div>
+    </div>
+{% endblock %}

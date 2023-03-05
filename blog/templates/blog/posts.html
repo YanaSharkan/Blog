@@ -4,16 +4,27 @@
 {% block title %}Posts{% endblock %}
 
 {% block content %}
-<a href="{% url 'blog:posts' %}">Create post</a>
+{% if user.is_authenticated %}
+<a class="create" href="{% url 'blog:create_post' %}">Create post</a>
+{% endif %}
 
 {% for entry in entries_list %}
-<div>
-    <div>{{ entry.title }}</div>
-    <div>{{ entry.author }}</div>
-    <div>{{ entry.content }}</div>
-    <div>
-        <img width="300px" src="{% static 'image/red_fox.jpg' %}" alt="My image">
+<div class="post">
+    <div class="post_header">
+        <h3><a href="{% url 'blog:post' pk=entry.id %}">{{ entry.title }}</a></h3>
+        {% if entry.author == user %}
+        <div>
+            <a href="{% url 'blog:edit_post' pk=entry.id %}">Edit post</a>
+        </div>
+        {% endif %}
     </div>
+    <div class="author">Created by: <a href="{% url 'blog:profile' pk=entry.author.id %}">{{ entry.author }}</a></div>
+    <div>{% firstof entry.brief_content entry.content %}</div>
+    {% if entry.image %}
+        <div>
+            <img width="300px" src="{{entry.image.url}}" alt="My image">
+        </div>
+    {% endif %}
 </div>
 {% endfor %}
 <br>
