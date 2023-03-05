@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="profile">
+        <div>Login: <span class="val">{{entry.username}}</span></div>
+        <div>First name: <span class="val">{{entry.first_name}}</span></div>
+        <div>Last name: <span class="val">{{entry.last_name}}</span></div>
+        <div>Email: <span class="val">{{entry.email}}</span></div>
+        <div>All posts by {{entry.username}}: <a href="{% url 'blog:author_posts' author=entry.id %}">View</a></div>
+    </div>
+{% endblock %}
