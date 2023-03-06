@@ -109,6 +109,16 @@ h3, h2 {
     margin-bottom: 30px;
 }
 
+.comment {
+    margin: 30px 0 0;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #333333;
+}
+
+.comment div {
+    margin-bottom: 0;
+}
+
 .profile .val {
     font-weight: bold;
 }

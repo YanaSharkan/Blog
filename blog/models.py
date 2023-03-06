@@ -20,8 +20,10 @@ class Post(models.Model):
 
 class Comment(models.Model):
     content = models.TextField()
+    image = models.ImageField(upload_to='comments/', null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    is_moderated = models.BooleanField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=False)
+    is_moderated = models.BooleanField(default=False)
 
     def __str__(self):
         return self.content

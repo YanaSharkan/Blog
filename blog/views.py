@@ -44,6 +44,21 @@ class CreatePostView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         return super(CreatePostView, self).form_valid(form)
 
 
+class CreateCommentView(SuccessMessageMixin, CreateView):
+    login_url = reverse_lazy('blog:login')
+    template_name = 'blog/create_comment.html'
+    model = Comment
+    success_url = reverse_lazy('blog:posts')
+    fields = ['content', 'image']
+    success_message = "Comment created"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = Post.objects.get(id=self.kwargs["pk"])
+        form.save()
+        return super(CreateCommentView, self).form_valid(form)
+
+
 class EditPostView(SuccessMessageMixin, AuthorRequiredMixin, generic.UpdateView):
     model = Post
     fields = ["title", 'brief_content', "content", "image"]
@@ -88,3 +103,6 @@ class PostView(generic.DetailView):
     context_object_name = 'entry'
     template_name = "blog/post.html"
 
+    def get_object(self, queryset=None):
+        post = Post.objects.get(id=self.kwargs["pk"])
+        return post
