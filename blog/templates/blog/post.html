@@ -4,8 +4,29 @@
         <div><h2>{{entry.title}}</h2></div>
         <div>Created by: <a href="{% url 'blog:profile' pk=entry.author.id %}">{{ entry.author }}</a></div>
         <div>{{entry.content}}</div>
+        {% if entry.image %}
+            <div>
+                 <img width="300px" src="{{entry.image.url}}" alt="My image">
+            </div>
+        {% endif %}
+        <div><a href="{% url 'blog:create_comment' pk=entry.id %}">Create Comment To Post</a></div>
         <div>
-             <img width="300px" src="{{entry.image.url}}" alt="My image">
+            <h2>Comments:</h2>
+            {% if entry.comment_set.all %}
+                <div>
+                    {% for comment in entry.comment_set.all %}
+                        <div class="comment">
+                            <div>Created by: {% firstof comment.author 'Anonymous User' %}</div>
+                            <div>{{comment.content}}</div>
+                            {% if comment.image %}
+                                <img width="120px" src="{{comment.image.url}}" alt="My image">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div>No Comments</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
