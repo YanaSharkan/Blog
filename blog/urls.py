@@ -8,6 +8,7 @@ app_name = 'blog'
 urlpatterns = [
     path('', views.PostsView.as_view(), name='posts'),
     path('create/', views.CreatePostView.as_view(), name='create_post'),
+    path('feedback/', views.leave_feedback, name='feedback'),
     path('edit/<int:pk>', views.EditPostView.as_view(), name='edit_post'),
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='blog/logout.html'), name='logout'),

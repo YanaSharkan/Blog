@@ -32,7 +32,7 @@ header a {
     margin-left: 24px;
 }
 
-header a, header a:visited, header a:hover, header a:active {
+header a:link, header a:visited, header a:hover, header a:active {
     color: #ffffff;
 }
 
@@ -74,6 +74,7 @@ a:link, a:visited, a:hover, a:active {
 h3, h2 {
     font-size: 24px;
     margin: 0;
+    text-align: center;
 }
 
 .alert {

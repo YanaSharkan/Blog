@@ -10,6 +10,7 @@
         <header>
             <h1><a href="{% url 'blog:posts' %}">Blog</a></h1>
             <div>
+                <a href="{% url 'blog:feedback' %}">Leave Feedback</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'blog:update_profile' %}">{{user.username}}</a>
                     <a href="{% url 'blog:logout' %}">Logout</a>
