@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+{% for field, errors in form.errors.items %}
+    {% for error in errors %}
+        <div style="color: red; text-align: center">{{ error }}</div>
+    {% endfor %}
+{% endfor %}
 <form class="reg" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save">
