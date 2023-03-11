@@ -12,7 +12,7 @@ from django.views import generic
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 
-from .models import Post, Comment
+from .models import Post, Comment, Profile
 from .tasks import send_feedback, send_content_notification
 
 User = get_user_model()
@@ -23,7 +23,6 @@ class AuthorRequiredMixin(UserPassesTestMixin):
         return self.get_object().author == self.request.user
 
 
-@method_decorator(cache_page(60 * 5), name='dispatch')
 class PostsView(generic.ListView):
     template_name = 'blog/posts.html'
     context_object_name = 'entries_list'
@@ -113,23 +112,29 @@ class RegisterFormView(SuccessMessageMixin, generic.FormView):
 
 
 class UpdateProfile(LoginRequiredMixin, SuccessMessageMixin, generic.UpdateView):
-    model = User
-    fields = ["first_name", "last_name", "email"]
+    model = Profile
+    fields = ["full_name", "age", "about"]
     template_name = "blog/update_profile.html"
+    login_url = reverse_lazy('blog:login')
     success_url = reverse_lazy("blog:posts")
     success_message = "Profile updated"
 
     def get_object(self, queryset=None):
-        user = self.request.user
-        return user
+        obj, created = Profile.objects.get_or_create(user=self.request.user)
+        return obj
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UpdateProfile, self).form_valid(form)
 
 
-class Profile(generic.DetailView):
+class ViewProfile(generic.DetailView):
     model = User
     context_object_name = 'entry'
     template_name = "blog/profile.html"
 
 
+@method_decorator(cache_page(60), name='dispatch')
 class PostView(generic.DetailView):
     model = Post
     context_object_name = 'entry'

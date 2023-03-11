@@ -27,3 +27,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True
+    )
+    about = models.TextField(null=True)
+    full_name = models.CharField(max_length=50, null=True)
+    age = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.full_name
