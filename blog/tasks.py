@@ -1,9 +1,9 @@
-from core.celery import app
+from celery import shared_task
 
 from django.core.mail import send_mail
 
 
-@app.task
+@shared_task()
 def send_feedback(email, text):
     send_mail(
         'Feedback from user',
@@ -14,7 +14,7 @@ def send_feedback(email, text):
     )
 
 
-@app.task
+@shared_task()
 def send_content_notification(email, title, text):
     send_mail(
         title,

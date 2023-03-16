@@ -1,19 +1,18 @@
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
-from django.utils.decorators import method_decorator
-from blog.forms import RegisterForm, FeedbackForm
+from blog.forms import FeedbackForm, RegisterForm
+
 from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.shortcuts import render, redirect
-from django.views.decorators.cache import cache_page
-
-
-from django.views import generic
-from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views import generic
+from django.views.decorators.cache import cache_page
+from django.views.generic.edit import CreateView
 
-from .models import Post, Comment, Profile
-from .tasks import send_feedback, send_content_notification
+from .models import Comment, Post, Profile
+from .tasks import send_content_notification, send_feedback
 
 User = get_user_model()
 
@@ -43,16 +42,17 @@ class PostsView(generic.ListView):
 def leave_feedback(request):
     params = dict()
     params["form"] = FeedbackForm()
+    data = dict()
 
     if request.method == "POST":
         form = FeedbackForm(request.POST)
         if form.is_valid():
             superusers_emails = User.objects.filter(is_superuser=True).values_list('email').first()
             send_feedback.apply_async((superusers_emails, form.cleaned_data['text']))
-            messages.success(request, 'Feedback was sent')
-            return redirect(reverse_lazy("blog:posts"))
+            data["form_is_valid"] = True
 
-    return render(request, "blog/feedback.html", params)
+    data['html_form'] = render_to_string('blog/includes/feedback.html', params, request=request)
+    return JsonResponse(data)
 
 
 class CreatePostView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
